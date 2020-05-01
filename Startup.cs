@@ -12,6 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+
+
 
 namespace CovidData2020
 {
@@ -61,6 +64,7 @@ namespace CovidData2020
                     .WithOrigins("http://localhost:3000") //front end app host origin
                     .AllowCredentials()));
             services.AddControllers();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,6 +80,7 @@ namespace CovidData2020
             }
 
             app.UseCors("CorsPolicy");
+         
 
             app.UseRouting();
 
@@ -84,6 +89,16 @@ namespace CovidData2020
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
+                }
             });
         }
     }
